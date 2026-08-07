@@ -1,20 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-demo
-  namespace: demo
+  name: pipecd-demo
+  labels:
+    app: pipecd-demo
+    pipecd.dev/variant: primary    # Etiqueta requerida por PipeCD
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: nginx-demo
+      app: pipecd-demo
+      pipecd.dev/variant: primary
   template:
     metadata:
       labels:
-        app: nginx-demo
+        app: pipecd-demo
+        pipecd.dev/variant: primary
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.27
+      - name: helloworld
+        image: gcr.io/pipecd/helloworld:v0.1.0    # Imagen de ejemplo de PipeCD[reference:9]
         ports:
-        - containerPort: 81
+        - containerPort: 9085

@@ -1,10 +1,28 @@
 apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
-  name: nginx-demo
+  name: pipecd-demo
   labels:
-    env: dev
+    env: demo
+  # Definición del pipeline de despliegue
+  pipeline:
+    stages:
+      # 1. Desplegar la nueva versión como Canary (20% de los pods)
+      - name: K8S_CANARY_ROLLOUT
+        with:
+          replicas: 20%        # El 20% del tráfico ira a la nueva versión[reference:4]
+      # 2. Pausa de 30 segundos para observar el comportamiento del Canary
+      - name: WAIT
+        with:
+          duration: 30s        # Espera 30 segundos[reference:5]
+      # 3. (Opcional) Agregar una aprobación manual antes de continuar
+      # - name: WAIT_APPROVAL   # Descomenta esta línea si quieres aprobación manual[reference:6]
+      # 4. Desplegar la nueva versión como Primaria (estable)
+      - name: K8S_PRIMARY_ROLLOUT
+      # 5. Eliminar los recursos del Canary
+      - name: K8S_CANARY_CLEAN
   input:
-    manifests:
-      - deployment.yaml
-      - service.yaml
+    kubectl:
+      manifests:
+        - "deployment.yaml"
+        - "service.yaml"
