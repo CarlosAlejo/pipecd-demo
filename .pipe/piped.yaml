@@ -1,0 +1,13 @@
+apiVersion: pipecd.dev/v1beta1
+kind: KubernetesApp
+spec:
+  name: nginx-demo
+
+  input:
+    manifests:
+      - deployment.yaml
+      - service.yaml
+
+  deploy:
+    replicas:
+      enabled: true
