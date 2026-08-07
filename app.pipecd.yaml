@@ -1,0 +1,10 @@
+apiVersion: pipecd.dev/v1beta1
+kind: KubernetesApp
+spec:
+  name: nginx-demo
+  labels:
+    env: dev
+  input:
+    manifests:
+      - deployment.yaml
+      - service.yaml
